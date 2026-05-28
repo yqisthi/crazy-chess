@@ -1,6 +1,10 @@
 use leptos::prelude::mount_to_body;
 use leptos::prelude::*;
 
+mod components;
+
+use components::chess_board::ChessBoard;
+
 fn main() {
     console_error_panic_hook::set_once();
     mount_to_body(App);
@@ -8,13 +12,9 @@ fn main() {
 
 #[component]
 fn App() -> impl IntoView {
-    let (count, set_count) = signal(0);
-
     view! {
-        <button on:click=move |_| set_count.set(count.get()+1)>"Click Me!"</button>
-        <p>
-        "Count: "
-        {move || count}
-        </p>
+    <main class="flex items-center justify-center min-h-screen">
+        <ChessBoard/>
+    </main>
     }
 }
