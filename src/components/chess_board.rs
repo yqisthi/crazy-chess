@@ -3,7 +3,7 @@ use leptos::prelude::*;
 #[component]
 pub fn ChessBoard() -> impl IntoView {
     view! {
-        <div class="grid h-80 w-80 grid-cols-8 grid-rows-8 sm:h-[500px] sm:w-[500px]">
+        <div class="grid h-80 w-80 grid-cols-8 grid-rows-8 sm:h-[500px] sm:w-[500px] border-4 border-black">
             {
                 (0..64)
                     .map(|i| {

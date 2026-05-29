@@ -1,1 +1,8 @@
 /target
+# WASM build artifacts
+/pkg/
+/dist/
+/target/
+
+# generated leptos output (if applicable)
+*.wasm
