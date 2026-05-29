@@ -2,6 +2,7 @@ use leptos::prelude::mount_to_body;
 
 mod app;
 mod components;
+mod model;
 
 use app::App;
 
