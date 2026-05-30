@@ -39,6 +39,14 @@ pub fn ChessBoard() -> impl IntoView {
                         let is_black = (row + col) % 2 == 0;
                         let bg = if is_black { "bg-amber-800" } else { "bg-amber-100" };
                         let piece_symbol = move || board.get()[i].map(|p| p.unicode());
+                        let bg_valid_move = move || {
+                        if let Some(from) = selected.get() {
+                          if legal_moves(&board.get(), from).contains(&i) {
+                            return "bg-slate-100";
+                            }
+                          }
+                          return ""
+                        };
 
                         view! {
                           <div
@@ -60,12 +68,20 @@ pub fn ChessBoard() -> impl IntoView {
                             }
                             >
                             <span class=move || {
-                                let shadow = if selected.get() == Some(i) {"bg-slate-100"} else {""};
+                                let shadow = if selected.get() == Some(i) {"bg-slate-300"} else {""};
                                 format!("flex w-full h-full items-center justify-center cursor-pointer {}", shadow)
                               }
                             >
                               {piece_symbol}
                             </span>
+                            <div class=move || {
+                              if let Some(from) = selected.get() {
+                                  if legal_moves(&board.get(), from).contains(&i) {
+                                      return "absolute w-3 h-3 rounded-full bg-black opacity-30".to_string();
+                                  }
+                              }
+                              "hidden".to_string()
+                            }/>
                           </div>
                         }
                     })

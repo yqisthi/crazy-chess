@@ -1,5 +1,8 @@
 use crate::model::{
-    moves::{bishop::bishop_moves, knight::knight_moves, pawn::pawn_moves, rook::rook_moves},
+    moves::{
+        bishop::bishop_moves, knight::knight_moves, pawn::pawn_moves, queen::queen_moves,
+        rook::rook_moves,
+    },
     piece::{Color, Piece, PieceKind},
 };
 
@@ -101,7 +104,7 @@ pub fn legal_moves(board: &Board, from: usize) -> Vec<usize> {
             PieceKind::Rook => rook_moves(board, from),
             PieceKind::Knight => knight_moves(board, from),
             PieceKind::Bishop => bishop_moves(board, from),
-            PieceKind::Queen => todo!(),
+            PieceKind::Queen => queen_moves(board, from),
             PieceKind::King => todo!(),
         },
     }
