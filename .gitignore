@@ -6,3 +6,4 @@
 
 # generated leptos output (if applicable)
 *.wasm
+dist/index.html
