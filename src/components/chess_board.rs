@@ -39,14 +39,6 @@ pub fn ChessBoard() -> impl IntoView {
                         let is_black = (row + col) % 2 == 0;
                         let bg = if is_black { "bg-amber-800" } else { "bg-amber-100" };
                         let piece_symbol = move || board.get()[i].map(|p| p.unicode());
-                        let bg_valid_move = move || {
-                        if let Some(from) = selected.get() {
-                          if legal_moves(&board.get(), from).contains(&i) {
-                            return "bg-slate-100";
-                            }
-                          }
-                          return ""
-                        };
 
                         view! {
                           <div
