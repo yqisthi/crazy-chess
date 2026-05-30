@@ -1,6 +1,9 @@
 use leptos::{html::I, prelude::*};
 
-use crate::model::{board::initial_board, piece::Piece};
+use crate::model::{
+    board::{Board, initial_board, legal_moves},
+    piece::Piece,
+};
 
 #[component]
 pub fn ChessBoard() -> impl IntoView {
@@ -11,20 +14,18 @@ pub fn ChessBoard() -> impl IntoView {
         if piece.is_none() {
             return;
         }
-        if selected.get() == Some(tile_index) {
-            selected.set(None)
-        } else {
-            selected.set(Some(tile_index))
-        }
+        selected.set(Some(tile_index))
     };
 
-    let handle_move_piece = move |target: usize| {
-        if let Some(from) = selected.get() {
-            board.update(|b| {
-                b[target] = b[from];
-                b[from] = None;
-            });
-            selected.set(None);
+    let handle_move_piece = move |from: usize, target: usize| {
+        if legal_moves(&board.get(), from).contains(&target) {
+            if let Some(from) = selected.get() {
+                board.update(|b| {
+                    b[target] = b[from];
+                    b[from] = None;
+                });
+                selected.set(None);
+            }
         }
     };
 
@@ -45,7 +46,16 @@ pub fn ChessBoard() -> impl IntoView {
                             on:click=move |_| {
                               match selected.get() {
                                 None => handle_select_piece(i, board.get()[i]),
-                                Some(_) => handle_move_piece(i),
+                                Some(from) => {
+                                    if from == i {
+                                        selected.set(None);
+                                    } else if board.get()[i].is_some() {
+                                        handle_select_piece(i, board.get()[i]);
+                                    }
+                                    else {
+                                        handle_move_piece(from, i)
+                                    }
+                                },
                               }
                             }
                             >
