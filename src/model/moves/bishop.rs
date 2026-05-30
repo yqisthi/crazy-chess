@@ -12,7 +12,7 @@ pub fn bishop_moves(board: &Board, from: usize) -> Vec<usize> {
         let mut r = row + dr;
 
         while c >= 0 && c < 8 && r >= 0 && r < 8 {
-            let target = get_tile_by_coordinate(c, r);
+            let target: usize = get_tile_by_coordinate(c, r);
             if board[target].is_none() {
                 moves.push(target);
             } else {
