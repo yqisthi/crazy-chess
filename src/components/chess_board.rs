@@ -32,7 +32,7 @@ pub fn ChessBoard() -> impl IntoView {
     view! {
         <div class="grid h-80 w-80 grid-cols-8 grid-rows-8 auto-rows-fr sm:h-[500px] sm:w-[500px] border-4 border-black">
             {
-                (0..64)
+                (0..64).rev()
                     .map(|i| {
                         let row = i / 8;
                         let col = i % 8;
