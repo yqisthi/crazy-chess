@@ -1,4 +1,4 @@
-use leptos::{attr::selected, prelude::*};
+use leptos::{html::I, prelude::*};
 
 use crate::model::{board::initial_board, piece::Piece};
 
@@ -7,15 +7,24 @@ pub fn ChessBoard() -> impl IntoView {
     let board = RwSignal::new(initial_board());
     let selected = RwSignal::new(None::<usize>);
 
-    let handle_select_piece = move |tile_index: usize, option: Option<Piece>| {
-        if option.is_none() {
+    let handle_select_piece = move |tile_index: usize, piece: Option<Piece>| {
+        if piece.is_none() {
             return;
+        }
+        if selected.get() == Some(tile_index) {
+            selected.set(None)
         } else {
-            if selected.get() == Some(tile_index) {
-                selected.set(None)
-            } else {
-                selected.set(Some(tile_index))
-            }
+            selected.set(Some(tile_index))
+        }
+    };
+
+    let handle_move_piece = move |target: usize| {
+        if let Some(from) = selected.get() {
+            board.update(|b| {
+                b[target] = b[from];
+                b[from] = None;
+            });
+            selected.set(None);
         }
     };
 
@@ -28,12 +37,17 @@ pub fn ChessBoard() -> impl IntoView {
                         let col = i % 8;
                         let is_black = (row + col) % 2 == 0;
                         let bg = if is_black { "bg-amber-800" } else { "bg-amber-100" };
-                        let piece_symbol = board.get()[i].map(|p| p.unicode());
+                        let piece_symbol = move || board.get()[i].map(|p| p.unicode());
 
                         view! {
                           <div
                             class=format!("w-full h-full flex items-center justify-center text-3xl {}", bg)
-                            on:click=move |_| handle_select_piece(i, board.get()[i])
+                            on:click=move |_| {
+                              match selected.get() {
+                                None => handle_select_piece(i, board.get()[i]),
+                                Some(_) => handle_move_piece(i),
+                              }
+                            }
                             >
                             <span class=move || {
                                 let shadow = if selected.get() == Some(i) {"bg-slate-100"} else {""};
