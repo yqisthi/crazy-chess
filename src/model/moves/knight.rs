@@ -1,4 +1,4 @@
-use crate::model::board::Board;
+use crate::model::{board::Board, moves::helper::get_tile_by_coordinate};
 
 pub fn knight_moves(board: &Board, from: usize) -> Vec<usize> {
     let mut moves = Vec::new();
@@ -7,7 +7,7 @@ pub fn knight_moves(board: &Board, from: usize) -> Vec<usize> {
 
     // top-left
     if is_valid_knight_tile(col - 1, row + 2) {
-        let target = get_knight_tile(col - 1, row + 2);
+        let target = get_tile_by_coordinate(col - 1, row + 2);
         if board[target].is_none() {
             moves.push(target);
         }
@@ -15,7 +15,7 @@ pub fn knight_moves(board: &Board, from: usize) -> Vec<usize> {
 
     // left-top
     if is_valid_knight_tile(col - 2, row + 1) {
-        let target = get_knight_tile(col - 2, row + 1);
+        let target = get_tile_by_coordinate(col - 2, row + 1);
         if board[target].is_none() {
             moves.push(target);
         }
@@ -23,7 +23,7 @@ pub fn knight_moves(board: &Board, from: usize) -> Vec<usize> {
 
     // left-bottom
     if is_valid_knight_tile(col - 2, row - 1) {
-        let target = get_knight_tile(col - 2, row - 1);
+        let target = get_tile_by_coordinate(col - 2, row - 1);
         if board[target].is_none() {
             moves.push(target);
         }
@@ -31,7 +31,7 @@ pub fn knight_moves(board: &Board, from: usize) -> Vec<usize> {
 
     // bottom-left
     if is_valid_knight_tile(col - 1, row - 2) {
-        let target = get_knight_tile(col - 1, row - 2);
+        let target = get_tile_by_coordinate(col - 1, row - 2);
         if board[target].is_none() {
             moves.push(target);
         }
@@ -39,7 +39,7 @@ pub fn knight_moves(board: &Board, from: usize) -> Vec<usize> {
 
     // top-right
     if is_valid_knight_tile(col + 1, row + 2) {
-        let target = get_knight_tile(col + 1, row + 2);
+        let target = get_tile_by_coordinate(col + 1, row + 2);
         if board[target].is_none() {
             moves.push(target);
         }
@@ -47,7 +47,7 @@ pub fn knight_moves(board: &Board, from: usize) -> Vec<usize> {
 
     // right-top
     if is_valid_knight_tile(col + 2, row + 1) {
-        let target = get_knight_tile(col + 2, row + 1);
+        let target = get_tile_by_coordinate(col + 2, row + 1);
         if board[target].is_none() {
             moves.push(target);
         }
@@ -55,7 +55,7 @@ pub fn knight_moves(board: &Board, from: usize) -> Vec<usize> {
 
     // right-bottom
     if is_valid_knight_tile(col + 2, row - 1) {
-        let target = get_knight_tile(col + 2, row - 1);
+        let target = get_tile_by_coordinate(col + 2, row - 1);
         if board[target].is_none() {
             moves.push(target);
         }
@@ -63,7 +63,7 @@ pub fn knight_moves(board: &Board, from: usize) -> Vec<usize> {
 
     // bottom-right
     if is_valid_knight_tile(col + 1, row - 2) {
-        let target = get_knight_tile(col + 1, row - 2);
+        let target = get_tile_by_coordinate(col + 1, row - 2);
         if board[target].is_none() {
             moves.push(target);
         }
@@ -72,9 +72,6 @@ pub fn knight_moves(board: &Board, from: usize) -> Vec<usize> {
     return moves;
 }
 
-fn get_knight_tile(col: i32, row: i32) -> usize {
-    return ((row * 8) + col) as usize;
-}
 
 fn is_valid_knight_tile(col: i32, row: i32) -> bool {
     if col < 0 || row < 0 || col > 8 || row > 8 {

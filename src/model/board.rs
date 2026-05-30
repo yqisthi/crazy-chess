@@ -1,4 +1,7 @@
-use crate::model::{moves::{knight::knight_moves, pawn::pawn_moves, rook::rook_moves}, piece::{Color, Piece, PieceKind}};
+use crate::model::{
+    moves::{bishop::bishop_moves, knight::knight_moves, pawn::pawn_moves, rook::rook_moves},
+    piece::{Color, Piece, PieceKind},
+};
 
 pub type Board = [Option<Piece>; 64];
 
@@ -97,7 +100,7 @@ pub fn legal_moves(board: &Board, from: usize) -> Vec<usize> {
             PieceKind::Pawn => pawn_moves(board, from, piece.color),
             PieceKind::Rook => rook_moves(board, from),
             PieceKind::Knight => knight_moves(board, from),
-            PieceKind::Bishop => todo!(),
+            PieceKind::Bishop => bishop_moves(board, from),
             PieceKind::Queen => todo!(),
             PieceKind::King => todo!(),
         },
