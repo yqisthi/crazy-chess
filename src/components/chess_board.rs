@@ -1,9 +1,6 @@
-use leptos::{html::I, prelude::*};
+use leptos::prelude::*;
 
-use crate::model::{
-    board::{Board, initial_board, legal_moves},
-    piece::Piece,
-};
+use crate::model::{board::{initial_board, legal_moves}, piece::Piece};
 
 #[component]
 pub fn ChessBoard() -> impl IntoView {
