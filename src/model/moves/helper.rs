@@ -22,3 +22,7 @@ pub fn check_target(board: &Board, target: usize, color: Color) -> MoveResult {
         }
     }
 }
+
+pub fn is_valid_tile(col: i32, row: i32) -> bool {
+  return col >= 0 && col < 8 && row >= 0 && row < 8;
+}

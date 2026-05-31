@@ -1,6 +1,6 @@
 use crate::model::{
     game::Board,
-    moves::helper::{MoveResult, check_target, get_tile_by_coordinate},
+    moves::helper::{MoveResult, check_target, get_tile_by_coordinate, is_valid_tile},
     piece::Color,
 };
 
@@ -21,11 +21,11 @@ pub fn king_moves(board: &Board, from: usize, color: Color) -> Vec<usize> {
     ];
 
     for (dc, dr) in directions {
-        let c = col + dc;
-        let r = row + dr;
+        let target_col = col + dc;
+        let target_row = row + dr;
 
-        if c >= 0 && c < 8 && r >= 0 && r < 8 {
-            let target = get_tile_by_coordinate(c, r);
+        if is_valid_tile(target_col, target_row) {
+            let target = get_tile_by_coordinate(target_col, target_row);
             match check_target(board, target, color) {
                 MoveResult::Empty | MoveResult::Enemy => moves.push(target),
                 MoveResult::Friendly => {}

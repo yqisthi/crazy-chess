@@ -1,6 +1,6 @@
 use crate::model::{
     game::Board,
-    moves::helper::{MoveResult, check_target, get_tile_by_coordinate},
+    moves::helper::{MoveResult, check_target, get_tile_by_coordinate, is_valid_tile},
     piece::Color,
 };
 
@@ -12,17 +12,17 @@ pub fn bishop_moves(board: &Board, from: usize, color: Color) -> Vec<usize> {
     let directions = [(1, 1), (1, -1), (-1, 1), (-1, -1)];
 
     for (dc, dr) in directions {
-        let mut c = col + dc;
-        let mut r = row + dr;
+        let mut target_col = col + dc;
+        let mut target_row = row + dr;
 
-        while c >= 0 && c < 8 && r >= 0 && r < 8 {
-            let target: usize = get_tile_by_coordinate(c, r);
+        while is_valid_tile(target_col, target_row) {
+            let target: usize = get_tile_by_coordinate(target_col, target_row);
             let is_blocked = get_bishop_move(board, &mut moves, target, color);
             if is_blocked {
               break;
             }
-            c += dc;
-            r += dr;
+            target_col += dc;
+            target_row += dr;
         }
     }
 
