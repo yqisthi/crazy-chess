@@ -1,6 +1,6 @@
 use crate::model::{
     game::Board,
-    moves::helper::{MoveResult, check_target, get_tile_by_coordinate, is_valid_tile},
+    moves::helpers::{MoveResult, check_target, get_tile_by_coordinate, is_valid_tile},
     piece::Color,
 };
 

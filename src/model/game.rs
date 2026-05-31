@@ -109,3 +109,16 @@ pub fn legal_moves(board: &Board, from: usize) -> Vec<usize> {
         },
     }
 }
+
+pub fn execute_move(board: &mut Board, from: usize, target: usize) {
+    board[target] = board[from];
+    board[from] = None;
+}
+
+pub fn update_turn(color: &mut Color) {
+    *color = if *color == Color::White {
+        Color::Black
+    } else {
+        Color::White
+    }
+}

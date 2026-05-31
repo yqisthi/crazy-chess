@@ -1,4 +1,4 @@
-use crate::model::{game::Board, moves::helper::{MoveResult, check_target}, piece::Color};
+use crate::model::{game::Board, moves::helpers::{MoveResult, check_target}, piece::Color};
 
 pub fn rook_moves(board: &Board, from: usize, color: Color) -> Vec<usize> {
     let mut moves = Vec::new();

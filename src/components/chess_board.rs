@@ -1,7 +1,7 @@
 use leptos::prelude::*;
 
 use crate::model::{
-    game::{init_game, legal_moves},
+    game::{execute_move, init_game, legal_moves, update_turn},
     piece::Piece,
 };
 
@@ -13,10 +13,10 @@ pub fn ChessBoard() -> impl IntoView {
     let selected = RwSignal::new(None::<usize>);
 
     let handle_select_piece = move |tile_index: usize, piece: Option<Piece>| {
-        if piece.map(|p| p.color) != Some(turn.get()) {
+        let Some(piece) = piece else {
             return;
-        }
-        if piece.is_none() {
+        };
+        if piece.color != turn.get() {
             return;
         }
         selected.set(Some(tile_index))
@@ -25,11 +25,9 @@ pub fn ChessBoard() -> impl IntoView {
     let handle_move_piece = move |from: usize, target: usize| {
         if legal_moves(&board.get(), from).contains(&target) {
             if let Some(from) = selected.get() {
-                board.update(|b| {
-                    b[target] = b[from];
-                    b[from] = None;
-                });
+                board.update(|b| execute_move(b, from, target));
                 selected.set(None);
+                turn.update(|c| update_turn(c));
             }
         }
     };
@@ -60,7 +58,7 @@ pub fn ChessBoard() -> impl IntoView {
                                         handle_select_piece(i, board.get()[i]);
                                     }
                                     else {
-                                        handle_move_piece(from, i)
+                                        handle_move_piece(from,  i)
                                     }
                                 },
                               }
