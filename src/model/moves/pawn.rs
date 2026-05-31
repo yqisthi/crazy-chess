@@ -12,15 +12,13 @@ pub fn pawn_moves(board: &Board, from: usize, color: Color) -> Vec<usize> {
 
     match color {
         Color::White => {
-            let target = from + 8;
-            get_pawn_move(board, &mut moves, target, color);
+            get_pawn_move(board, &mut moves, from, color);
 
             let capture_directions = [(col + 1, row + 1), (col + -1, row + 1)];
             get_pawn_capture(board, &mut moves, capture_directions, color)
         }
         Color::Black => {
-            let target = from - 8;
-            get_pawn_move(board, &mut moves, target, color);
+            get_pawn_move(board, &mut moves, from, color);
 
             let capture_directions = [(col + 1, row - 1), (col - 1, row - 1)];
             get_pawn_capture(board, &mut moves, capture_directions, color)
@@ -30,10 +28,29 @@ pub fn pawn_moves(board: &Board, from: usize, color: Color) -> Vec<usize> {
     return moves;
 }
 
-fn get_pawn_move(board: &Board, moves: &mut Vec<usize>, target: usize, color: Color) {
+fn pawn_move_forward(board: &Board, moves: &mut Vec<usize>, target: usize, color: Color) {
     match check_target(board, target, color) {
         MoveResult::Empty => moves.push(target),
         MoveResult::Enemy | MoveResult::Friendly => {}
+    }
+}
+
+fn get_pawn_move(board: &Board, moves: &mut Vec<usize>, from: usize, color: Color) {
+    match color {
+        Color::White => {
+            let target = from + 8;
+            pawn_move_forward(board, moves, target, color);
+            if from < 16 {
+                pawn_move_forward(board, moves, target + 8, color);
+            }
+        }
+        Color::Black => {
+            let target = from - 8;
+            pawn_move_forward(board, moves, target, color);
+            if from >= 48 {
+                pawn_move_forward(board, moves, target - 8, color);
+            }
+        }
     }
 }
 
