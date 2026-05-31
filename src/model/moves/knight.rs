@@ -1,13 +1,14 @@
 use crate::model::{
     game::Board,
-    moves::helpers::{MoveResult, check_target, get_tile_by_coordinate, is_valid_tile},
+    moves::helpers::{
+        MoveResult, check_target, get_coordinate, get_tile_by_coordinate, is_valid_tile,
+    },
     piece::Color,
 };
 
 pub fn knight_moves(board: &Board, from: usize, color: Color) -> Vec<usize> {
     let mut moves = Vec::new();
-    let col = (from % 8) as i32;
-    let row = (from / 8) as i32;
+    let (col, row) = get_coordinate(from);
 
     let directions = [
         (1, 2),   // up-right
@@ -32,7 +33,6 @@ pub fn knight_moves(board: &Board, from: usize, color: Color) -> Vec<usize> {
 
     return moves;
 }
-
 
 fn get_knight_move(board: &Board, moves: &mut Vec<usize>, target: usize, color: Color) {
     match check_target(board, target, color) {

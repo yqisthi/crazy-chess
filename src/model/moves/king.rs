@@ -1,13 +1,12 @@
 use crate::model::{
     game::Board,
-    moves::helpers::{MoveResult, check_target, get_tile_by_coordinate, is_valid_tile},
+    moves::helpers::{MoveResult, check_target, get_coordinate, get_tile_by_coordinate, is_valid_tile},
     piece::Color,
 };
 
 pub fn king_moves(board: &Board, from: usize, color: Color) -> Vec<usize> {
     let mut moves = Vec::new();
-    let col = (from % 8) as i32;
-    let row = (from / 8) as i32;
+    let (col, row) = get_coordinate(from);
 
     let directions = [
         (0, 1), // up

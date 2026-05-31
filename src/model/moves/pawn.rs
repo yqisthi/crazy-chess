@@ -1,27 +1,28 @@
 use crate::model::{
     game::Board,
-    moves::helpers::{MoveResult, check_target, get_tile_by_coordinate, is_valid_tile},
+    moves::helpers::{
+        MoveResult, check_target, get_coordinate, get_tile_by_coordinate, is_valid_tile,
+    },
     piece::Color,
 };
 
 pub fn pawn_moves(board: &Board, from: usize, color: Color) -> Vec<usize> {
     let mut moves = Vec::new();
-    let col = (from % 8) as i32;
-    let row = (from / 8) as i32;
+    let (col, row) = get_coordinate(from);
 
     match color {
         Color::White => {
             let target = from + 8;
             get_pawn_move(board, &mut moves, target, color);
 
-            let capture_directions = [(col+1, row+1), (col+-1,row+1)];
+            let capture_directions = [(col + 1, row + 1), (col + -1, row + 1)];
             get_pawn_capture(board, &mut moves, capture_directions, color)
         }
         Color::Black => {
             let target = from - 8;
             get_pawn_move(board, &mut moves, target, color);
 
-            let capture_directions = [(col+1, row-1), (col-1, row-1)];
+            let capture_directions = [(col + 1, row - 1), (col - 1, row - 1)];
             get_pawn_capture(board, &mut moves, capture_directions, color)
         }
     }
