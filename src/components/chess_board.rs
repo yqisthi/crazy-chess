@@ -1,16 +1,21 @@
 use leptos::prelude::*;
 
 use crate::model::{
-    board::{initial_board, legal_moves},
+    game::{init_game, legal_moves},
     piece::Piece,
 };
 
 #[component]
 pub fn ChessBoard() -> impl IntoView {
-    let board = RwSignal::new(initial_board());
+    let (initial_board, initial_turn) = init_game();
+    let board = RwSignal::new(initial_board);
+    let turn = RwSignal::new(initial_turn);
     let selected = RwSignal::new(None::<usize>);
 
     let handle_select_piece = move |tile_index: usize, piece: Option<Piece>| {
+        if piece.map(|p| p.color) != Some(turn.get()) {
+            return;
+        }
         if piece.is_none() {
             return;
         }
@@ -38,7 +43,9 @@ pub fn ChessBoard() -> impl IntoView {
                         let col = i % 8;
                         let is_black = (row + col) % 2 == 0;
                         let bg = if is_black { "bg-amber-800" } else { "bg-amber-100" };
-                        let piece_symbol = move || board.get()[i].map(|p| p.unicode());
+                        let piece = move || board.get()[i];
+                        let piece_symbol = move || piece().map(|p| p.unicode());
+                        let piece_color = move || piece().map(|p| p.color);
 
                         view! {
                           <div
@@ -49,7 +56,7 @@ pub fn ChessBoard() -> impl IntoView {
                                 Some(from) => {
                                     if from == i {
                                         selected.set(None);
-                                    } else if board.get()[i].is_some() {
+                                    } else if board.get()[i].is_some() && piece_color() == Some(turn.get()){
                                         handle_select_piece(i, board.get()[i]);
                                     }
                                     else {

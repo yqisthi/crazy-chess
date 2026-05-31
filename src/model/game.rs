@@ -8,7 +8,7 @@ use crate::model::{
 
 pub type Board = [Option<Piece>; 64];
 
-pub fn initial_board() -> Board {
+pub fn init_game() -> (Board, Color) {
     let mut board: Board = [None; 64];
 
     // White Pieces
@@ -93,7 +93,7 @@ pub fn initial_board() -> Board {
         });
     }
 
-    return board;
+    return (board, Color::White);
 }
 
 pub fn legal_moves(board: &Board, from: usize) -> Vec<usize> {
@@ -101,11 +101,11 @@ pub fn legal_moves(board: &Board, from: usize) -> Vec<usize> {
         None => vec![],
         Some(piece) => match piece.kind {
             PieceKind::Pawn => pawn_moves(board, from, piece.color),
-            PieceKind::Rook => rook_moves(board, from),
-            PieceKind::Knight => knight_moves(board, from),
-            PieceKind::Bishop => bishop_moves(board, from),
-            PieceKind::Queen => queen_moves(board, from),
-            PieceKind::King => king_moves(board, from),
+            PieceKind::Rook => rook_moves(board, from, piece.color),
+            PieceKind::Knight => knight_moves(board, from, piece.color),
+            PieceKind::Bishop => bishop_moves(board, from, piece.color),
+            PieceKind::Queen => queen_moves(board, from, piece.color),
+            PieceKind::King => king_moves(board, from, piece.color),
         },
     }
 }

@@ -1,6 +1,6 @@
-use crate::model::board::Board;
+use crate::model::{game::Board, moves::helper::{MoveResult, check_target}, piece::Color};
 
-pub fn rook_moves(board: &Board, from: usize) -> Vec<usize> {
+pub fn rook_moves(board: &Board, from: usize, color: Color) -> Vec<usize> {
     let mut moves = Vec::new();
     let col = from % 8;
     let row = from / 8;
@@ -8,9 +8,8 @@ pub fn rook_moves(board: &Board, from: usize) -> Vec<usize> {
     // down
     for i in (0..row).rev() {
         let target = (i * 8) + col;
-        if board[target].is_none() {
-            moves.push(target);
-        } else {
+        let is_blocked = get_rook_move(board, &mut moves, target, color);
+        if is_blocked {
             break;
         }
     }
@@ -18,9 +17,8 @@ pub fn rook_moves(board: &Board, from: usize) -> Vec<usize> {
     // up
     for i in (row + 1)..8 {
         let target = (i * 8) + col;
-        if board[target].is_none() {
-            moves.push(target);
-        } else {
+        let is_blocked = get_rook_move(board, &mut moves, target, color);
+        if is_blocked {
             break;
         }
     }
@@ -28,9 +26,8 @@ pub fn rook_moves(board: &Board, from: usize) -> Vec<usize> {
     // left
     for i in (0..col).rev() {
         let target = (8 * row) + i;
-        if board[target].is_none() {
-            moves.push(target);
-        } else {
+        let is_blocked = get_rook_move(board, &mut moves, target, color);
+        if is_blocked {
             break;
         }
     }
@@ -38,12 +35,25 @@ pub fn rook_moves(board: &Board, from: usize) -> Vec<usize> {
     // right
     for i in (col + 1)..8 {
         let target = (8 * row) + i;
-        if board[target].is_none() {
-            moves.push(target);
-        } else {
+        let is_blocked = get_rook_move(board, &mut moves, target, color);
+        if is_blocked {
             break;
         }
     }
 
     return moves;
+}
+
+fn get_rook_move(board: &Board, moves: &mut Vec<usize>, target: usize, color: Color) -> bool {
+    match check_target(board, target, color) {
+        MoveResult::Empty => {
+            moves.push(target);
+            false
+        }
+        MoveResult::Enemy => {
+            moves.push(target);
+            true
+        }
+        MoveResult::Friendly => true,
+    }
 }
