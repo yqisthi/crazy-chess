@@ -1,8 +1,11 @@
 use leptos::prelude::*;
 
-use crate::model::{
-    game::{execute_move, init_game, legal_moves, update_turn},
-    piece::Piece,
+use crate::{
+    components::chess_tile::ChessTile,
+    model::{
+        game::{execute_move, init_game, legal_moves, update_turn},
+        piece::Piece,
+    },
 };
 
 #[component]
@@ -11,6 +14,7 @@ pub fn ChessBoard() -> impl IntoView {
     let board = RwSignal::new(initial_board);
     let turn = RwSignal::new(initial_turn);
     let selected = RwSignal::new(None::<usize>);
+    let last_move = RwSignal::new(None::<(usize, usize)>);
 
     let handle_select_piece = move |tile_index: usize, piece: Option<Piece>| {
         let Some(piece) = piece else {
@@ -26,6 +30,7 @@ pub fn ChessBoard() -> impl IntoView {
         if legal_moves(&board.get(), from).contains(&target) {
             if let Some(from) = selected.get() {
                 board.update(|b| execute_move(b, from, target));
+                last_move.set(Some((from, target)));
                 selected.set(None);
                 turn.update(|c| update_turn(c));
             }
@@ -40,14 +45,16 @@ pub fn ChessBoard() -> impl IntoView {
                         let row = i / 8;
                         let col = i % 8;
                         let is_black = (row + col) % 2 == 0;
-                        let bg = if is_black { "bg-amber-800" } else { "bg-amber-100" };
+
+                        let is_selected = move || selected.get() == Some(i);
+                        let is_last_move = move || last_move.get().map_or(false, |(from, to)| from == i || to == i);
+                        let is_valid_move = move || selected.get().map_or(false, |from| legal_moves(&board.get(), from).contains(&i));
+
                         let piece = move || board.get()[i];
-                        let piece_symbol = move || piece().map(|p| p.unicode());
                         let piece_color = move || piece().map(|p| p.color);
 
                         view! {
                           <div
-                            class=format!("w-full h-full flex items-center justify-center text-3xl {}", bg)
                             on:click=move |_| {
                               match selected.get() {
                                 None => handle_select_piece(i, board.get()[i]),
@@ -64,21 +71,15 @@ pub fn ChessBoard() -> impl IntoView {
                               }
                             }
                             >
-                            <span class=move || {
-                                let shadow = if selected.get() == Some(i) {"bg-slate-300"} else {""};
-                                format!("flex w-full h-full items-center justify-center cursor-pointer {}", shadow)
-                              }
-                            >
-                              {piece_symbol}
-                            </span>
-                            <div class=move || {
-                              if let Some(from) = selected.get() {
-                                  if legal_moves(&board.get(), from).contains(&i) {
-                                      return "absolute w-3 h-3 rounded-full bg-black opacity-30".to_string();
-                                  }
-                              }
-                              "hidden".to_string()
-                            }/>
+
+                            <ChessTile
+                              piece=piece
+                              is_black=is_black
+                              is_selected=is_selected
+                              is_valid_move=is_valid_move
+                              is_last_move=is_last_move
+                            />
+
                           </div>
                         }
                     })
